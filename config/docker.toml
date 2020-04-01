@@ -1,0 +1,13 @@
+################
+#   Database   #
+################
+
+[database]
+username = "pocockn"
+password = "pocockn"
+host = "database"
+databaseName = "docker_pocockn"
+port = "3306"
+
+[poller]
+interval = "10s"
