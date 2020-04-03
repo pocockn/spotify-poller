@@ -1,6 +1,6 @@
 # spotify-poller
 
-Polls the Spotify-API for new tracks added to a playlist.
+Polls the Spotify-API for new tracks added to a playlist. If new tracks are found they are added to the database.
 
 ## Getting Started
 
