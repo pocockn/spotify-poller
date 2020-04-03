@@ -39,5 +39,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 - Allow for different playlists to be polled
 - CI
-- Finish handler test
 - Pass in Client ID through ENV var

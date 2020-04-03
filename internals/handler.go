@@ -2,6 +2,7 @@ package internals
 
 import (
 	"github.com/pocockn/recs-api/models"
+	internal_spotify "github.com/pocockn/spotify-poller/internals/spotify"
 	"github.com/sirupsen/logrus"
 	"github.com/zmb3/spotify"
 )
@@ -9,13 +10,13 @@ import (
 type (
 	// Handler holds the dependencies the handler function needs.
 	Handler struct {
-		client spotify.Client
+		client internal_spotify.SpotifyClient
 		store  Storer
 	}
 )
 
 // NewHandler creates a new handler struct.
-func NewHandler(client spotify.Client, store Storer) Handler {
+func NewHandler(client internal_spotify.SpotifyClient, store Storer) Handler {
 	return Handler{
 		client: client,
 		store:  store,
@@ -26,7 +27,7 @@ func NewHandler(client spotify.Client, store Storer) Handler {
 // has new songs, if it finds new songs it will add them to our database.
 func (h *Handler) Spotify() error {
 	logrus.Debugf("performing API request for playlist #%s", "01VmpQKq19m0CjP1bo1eMO")
-	playlist, err := h.client.GetPlaylist("01VmpQKq19m0CjP1bo1eMO")
+	playlist, _ := h.client.GetPlaylist("01VmpQKq19m0CjP1bo1eMO")
 
 	recs, err := h.fetchRecs()
 	if err != nil {
@@ -34,7 +35,6 @@ func (h *Handler) Spotify() error {
 	}
 
 	err = h.addNewRecs(playlist, recs)
-
 	if err != nil {
 		return err
 	}

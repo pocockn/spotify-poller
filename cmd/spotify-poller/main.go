@@ -13,10 +13,10 @@ import (
 
 func main() {
 	logrus.SetLevel(logrus.DebugLevel)
-	config := config.NewConfig()
-	connection := database.NewConnection(config)
+	pollerConfig := config.NewConfig()
+	connection := database.NewConnection(pollerConfig)
 
-	client, err := spotify.NewClient(config.Spotify)
+	client, err := spotify.NewClient(pollerConfig.Spotify)
 	if err != nil {
 		logrus.Fatal(err)
 	}
@@ -28,7 +28,7 @@ func main() {
 
 	poller := spotify_poller.NewPoller(
 		handler.Spotify,
-		time.NewTicker(config.Poller.Interval.Duration),
+		time.NewTicker(pollerConfig.Poller.Interval.Duration),
 	)
 
 	err = poller.Start()
