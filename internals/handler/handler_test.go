@@ -1,11 +1,11 @@
-package internals_test
+package handler_test
 
 import (
 	"github.com/golang/mock/gomock"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 	"github.com/pocockn/recs-api/models"
-	"github.com/pocockn/spotify-poller/internals"
+	handler2 "github.com/pocockn/spotify-poller/internals/handler"
 	mock_spotify "github.com/pocockn/spotify-poller/internals/store/mock"
 	"github.com/stretchr/testify/assert"
 	spotify_api "github.com/zmb3/spotify"
@@ -78,8 +78,9 @@ func TestHandlerCreatesNewRecs(t *testing.T) {
 
 	client := &mockSpotifyClient{}
 
-	handler := internals.NewHandler(
+	handler := handler2.NewHandler(
 		client,
+		"XDR",
 		mockStore,
 	)
 
@@ -123,8 +124,9 @@ func TestHandlerOnlyAddsRecsNotInDB(t *testing.T) {
 
 	client := &mockSpotifyClient{}
 
-	handler := internals.NewHandler(
+	handler := handler2.NewHandler(
 		client,
+		"XDR",
 		mockStore,
 	)
 
@@ -168,8 +170,9 @@ func TestHandlerErrorOnFetch(t *testing.T) {
 
 	client := &mockSpotifyClient{}
 
-	handler := internals.NewHandler(
+	handler := handler2.NewHandler(
 		client,
+		"XDR",
 		mockStore,
 	)
 
@@ -213,8 +216,9 @@ func TestHandlerErrorOnCreate(t *testing.T) {
 
 	client := &mockSpotifyClient{}
 
-	handler := internals.NewHandler(
+	handler := handler2.NewHandler(
 		client,
+		"XDR",
 		mockStore,
 	)
 

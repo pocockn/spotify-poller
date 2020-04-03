@@ -34,6 +34,7 @@ type (
 	Spotify struct {
 		ClientID     string
 		ClientSecret string
+		PlaylistID   string
 		TokenURL     string
 	}
 )
