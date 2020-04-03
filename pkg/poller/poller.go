@@ -6,7 +6,7 @@ import (
 )
 
 type (
-	// HandlerFunc is a function that is run each time the Spotify API is polled.
+	// HandlerFunc is a function that is run each time the API is polled.
 	HandlerFunc func() error
 
 	// Poller will poll the API based on the interval passed in.

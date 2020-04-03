@@ -1,0 +1,48 @@
+image: golang:1.13
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - go build -race -o spotify-poller ./cmd/spotify-poller/main.go
+
+test:
+  stage: test
+  script:
+    - make test
+
+deploy:
+  image: docker:stable
+  stage: deploy
+  services:
+    - docker:19.03.0-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: "/certs"
+  only:
+    refs:
+      - tags
+  script:
+    - export VERSION=$(cat ./VERSION)
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker build -t pococknick91/spotify-poller:$VERSION -f builds/Dockerfile .
+    - docker tag pococknick91/spotify-poller:$VERSION pococknick91/spotify-poller:latest
+    - echo "=> Pushing pococknick91/spotify-poller:$VERSION to docker"
+    - docker push pococknick91/spotify-poller
+  tags:
+    - docker
+
+release:
+  stage: deploy
+  only:
+    refs:
+      - tags
+  script:
+    - export GITHUB_TOKEN="$GITHUB_GORELEASER"
+    - curl -sL https://git.io/goreleaser | bash
+  tags:
+    - docker

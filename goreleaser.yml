@@ -1,0 +1,12 @@
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod download
+builds:
+  - binary: spotify-poller
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64

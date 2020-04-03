@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/pocockn/spotify-poller/config"
 	"github.com/pocockn/spotify-poller/internals/database"
-	handler2 "github.com/pocockn/spotify-poller/internals/handler"
+	"github.com/pocockn/spotify-poller/internals/handler"
 	"github.com/pocockn/spotify-poller/internals/spotify"
 	"github.com/pocockn/spotify-poller/internals/store"
 	spotify_poller "github.com/pocockn/spotify-poller/pkg/poller"
@@ -21,7 +21,7 @@ func main() {
 		logrus.Fatal(err)
 	}
 
-	handler := handler2.NewHandler(
+	handler := handler.NewHandler(
 		client,
 		pollerConfig.Spotify.PlaylistID,
 		store.NewStore(connection),
