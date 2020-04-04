@@ -32,8 +32,10 @@ func main() {
 		time.NewTicker(pollerConfig.Poller.Interval.Duration),
 	)
 
-	err = poller.Start()
-	if err != nil {
-		logrus.Fatalf("fatal error: %s", err)
+	errChan := poller.Start()
+	for err := range errChan {
+		if err != nil {
+			logrus.Fatalf("fatal error: %s", err)
+		}
 	}
 }

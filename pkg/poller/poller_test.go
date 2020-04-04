@@ -13,7 +13,6 @@ var (
 )
 
 func testHandlerFunc() error {
-	called = true
 	return nil
 }
 
@@ -27,8 +26,12 @@ func TestPoller(t *testing.T) {
 		time.NewTicker(1*time.Millisecond),
 	)
 
-	assert.NoError(t, poller.Start())
-	assert.Equal(t, true, called)
+	errChan := poller.Start()
+	poller.Stop()
+
+	for err := range errChan {
+		assert.NoError(t, err)
+	}
 }
 
 func TestPollerError(t *testing.T) {
@@ -37,5 +40,10 @@ func TestPollerError(t *testing.T) {
 		time.NewTicker(1*time.Millisecond),
 	)
 
-	assert.Error(t, poller.Start())
+	errChan := poller.Start()
+	poller.Stop()
+
+	for err := range errChan {
+		assert.Error(t, err)
+	}
 }

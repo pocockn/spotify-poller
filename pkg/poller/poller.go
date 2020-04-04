@@ -13,6 +13,8 @@ type (
 	Poller struct {
 		HandlerFunc HandlerFunc
 		interval    *time.Ticker
+		Errs        chan error
+		done        chan bool
 	}
 )
 
@@ -21,20 +23,37 @@ func NewPoller(handlerFunc HandlerFunc, interval *time.Ticker) Poller {
 	return Poller{
 		HandlerFunc: handlerFunc,
 		interval:    interval,
+		Errs:        make(chan error),
+		done:        make(chan bool, 0),
 	}
 }
 
-// Starts take the poller.
-func (p *Poller) Start() error {
-	logrus.Info("polling initialized. Status: Running")
+// Start starts take the poller.
+func (p *Poller) Start() <-chan error {
+	errc := make(chan error, 1)
 
-	for {
-		select {
-		case <-p.interval.C:
-			err := p.HandlerFunc()
-			if err != nil {
-				return err
+	go func() {
+		logrus.Info("polling initialized. Status: Running")
+		defer close(errc)
+		for {
+			select {
+			case <-p.interval.C:
+				err := p.HandlerFunc()
+				if err != nil {
+					errc <- err
+					return
+				}
+			case <-p.done:
+				logrus.Info("polling shutting down. Status: stopped.")
+				return
 			}
 		}
-	}
+	}()
+
+	return errc
+}
+
+// Stop the poller.
+func (p *Poller) Stop() {
+	p.done <- true
 }
